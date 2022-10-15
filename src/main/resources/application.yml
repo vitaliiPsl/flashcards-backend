@@ -1,1 +1,6 @@
 
+
+security:
+  jwt:
+    secret: jwt.super.secret.key
+    expiration-time-minutes: 10080
