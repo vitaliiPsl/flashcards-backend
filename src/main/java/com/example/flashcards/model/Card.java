@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "flash_card")
+@Table(name = "flash_card", uniqueConstraints = {
+        @UniqueConstraint(name = "uq_front_and_set", columnNames = {"front", "set_id"})
+})
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

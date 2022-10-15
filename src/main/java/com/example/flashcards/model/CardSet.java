@@ -7,7 +7,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "flash_card_set")
+@Table(name = "flash_card_set", uniqueConstraints = {
+        @UniqueConstraint(name = "uq_card_set_and_author", columnNames = {"name", "author_id"})
+})
 public class CardSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

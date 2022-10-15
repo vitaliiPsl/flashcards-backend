@@ -1,19 +1,23 @@
 package com.example.flashcards.model;
 
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "person")
+@Table(name = "person", indexes = {
+        @Index(name = "idx_user_username", columnList = "username", unique = true),
+        @Index(name = "idx_user_email", columnList = "email", unique = true)
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
     private String password;
 
