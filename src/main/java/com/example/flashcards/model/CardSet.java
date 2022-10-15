@@ -13,6 +13,9 @@ public class CardSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User author;
+
     private String name;
     private String description;
 
@@ -33,11 +36,11 @@ public class CardSet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CardSet cardSet = (CardSet) o;
-        return Objects.equals(id, cardSet.id) && Objects.equals(name, cardSet.name);
+        return Objects.equals(id, cardSet.id) && Objects.equals(author, cardSet.author) && Objects.equals(name, cardSet.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(author, name);
     }
 }
