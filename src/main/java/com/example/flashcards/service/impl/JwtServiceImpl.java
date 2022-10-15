@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,14 +35,13 @@ public class JwtServiceImpl implements JwtService {
         User user = (User) authentication.getPrincipal();
         List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
-        Instant issuedAt = LocalDateTime.now().toInstant(ZoneOffset.MIN);
-        Instant expiresAt = LocalDateTime.now().plusMinutes(expirationTimeMinutes).toInstant(ZoneOffset.MIN);
+        Instant expiresAt = LocalDateTime.now().plusMinutes(expirationTimeMinutes)
+                .atZone(ZoneId.systemDefault()).toInstant();
 
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                 .withSubject(user.getEmail())
                 .withClaim(CLAIM_ROLES, authorities)
-                .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
                 .sign(algorithm);
     }
