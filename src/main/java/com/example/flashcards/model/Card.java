@@ -1,9 +1,12 @@
 package com.example.flashcards.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "flash_card", uniqueConstraints = {
         @UniqueConstraint(name = "uq_front_and_set", columnNames = {"front", "set_id"})

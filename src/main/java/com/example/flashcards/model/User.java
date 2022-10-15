@@ -3,7 +3,9 @@ package com.example.flashcards.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "person", indexes = {
         @Index(name = "idx_user_username", columnList = "username", unique = true),

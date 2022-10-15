@@ -1,11 +1,14 @@
 package com.example.flashcards.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "flash_card_set", uniqueConstraints = {
         @UniqueConstraint(name = "uq_card_set_and_author", columnNames = {"name", "author_id"})
