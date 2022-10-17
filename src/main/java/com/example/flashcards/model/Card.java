@@ -30,11 +30,11 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return Objects.equals(id, card.id) && Objects.equals(front, card.front) && Objects.equals(back, card.back) && Objects.equals(set, card.set);
+        return Objects.equals(front, card.front) && Objects.equals(set, card.set);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, front, back, set);
+        return Objects.hash(front, set);
     }
 }
