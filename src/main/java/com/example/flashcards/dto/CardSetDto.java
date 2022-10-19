@@ -24,10 +24,10 @@ public class CardSetDto {
     private SetType type = SetType.PUBLIC;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
     private Set<CardDto> cards = new HashSet<>();
 }

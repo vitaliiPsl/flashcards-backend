@@ -26,8 +26,8 @@ public class CardSet {
 
     private SetType type = SetType.PUBLIC;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "set", cascade = CascadeType.ALL)
     private Set<Card> cards = new HashSet<>();

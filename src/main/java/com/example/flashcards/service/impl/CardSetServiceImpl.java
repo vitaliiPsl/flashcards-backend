@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -41,6 +42,7 @@ public class CardSetServiceImpl implements CardSetService {
 
         CardSet set = mapCardSetDtoToCardSet(cardSetDto);
         set.setAuthor(user);
+        set.setCreatedAt(LocalDateTime.now());
         set.getCards().forEach(card -> card.setSet(set));
 
         CardSet saved = cardSetRepository.save(set);
@@ -61,6 +63,8 @@ public class CardSetServiceImpl implements CardSetService {
         CardSet set = mapCardSetDtoToCardSet(cardSetDto);
         set.setId(id);
         set.setAuthor(existingSet.getAuthor());
+        set.setCreatedAt(existingSet.getCreatedAt());
+        set.setUpdatedAt(LocalDateTime.now());
 
         cardSetRepository.save(set);
 
