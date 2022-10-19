@@ -1,6 +1,8 @@
 package com.example.flashcards.service.impl;
 
 import com.example.flashcards.dto.CardDto;
+import com.example.flashcards.dto.requests.PaginationRequest;
+import com.example.flashcards.dto.responses.PaginationResponse;
 import com.example.flashcards.exceptions.ResourceAlreadyExist;
 import com.example.flashcards.exceptions.ResourceNotAccessible;
 import com.example.flashcards.exceptions.ResourceNotFound;
@@ -14,6 +16,9 @@ import com.example.flashcards.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,10 +85,25 @@ public class CardServiceImpl implements CardService {
 
         User user = getUser(auth);
         if(!isSetAuthor(user, set) && set.isPrivate()) {
-            throw new ResourceNotAccessible(cardId, Card.class);
+            throw new ResourceNotAccessible(setId, CardSet.class);
         }
 
         return mapCardToCardDto(card);
+    }
+
+    @Override
+    public PaginationResponse<CardDto> getCards(long setId, Authentication auth, PaginationRequest pagination) {
+        CardSet set = getSet(setId);
+
+        User user = getUser(auth);
+        if(!isSetAuthor(user, set) && set.isPrivate()) {
+            throw new ResourceNotAccessible(setId, CardSet.class);
+        }
+
+        PageRequest page = PageRequest.of(pagination.getPage(), pagination.getSize(), Sort.by("createdAt"));
+        Page<CardDto> cardDtoPage = cardRepository.findBySet(set, page).map(this::mapCardToCardDto);
+
+        return new PaginationResponse<>(cardDtoPage, pagination);
     }
 
     private Card getCardVerifySetAndAuthor(long cardId, long setId, Authentication auth) {

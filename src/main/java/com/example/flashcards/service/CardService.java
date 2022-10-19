@@ -1,6 +1,8 @@
 package com.example.flashcards.service;
 
 import com.example.flashcards.dto.CardDto;
+import com.example.flashcards.dto.requests.PaginationRequest;
+import com.example.flashcards.dto.responses.PaginationResponse;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -46,4 +48,13 @@ public interface CardService {
      * @return retrieved card
      */
     CardDto getCardById(long cardId, long setId, Authentication auth);
+
+    /**
+     * Retrieve cards if they are available for the authenticated user
+     * @param setId id of the set
+     * @param auth authenticated user
+     * @param pagination pagination request
+     * @return list of card according to pagination request
+     */
+    PaginationResponse<CardDto> getCards(long setId, Authentication auth, PaginationRequest pagination);
 }

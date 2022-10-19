@@ -1,6 +1,8 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.dto.CardDto;
+import com.example.flashcards.dto.requests.PaginationRequest;
+import com.example.flashcards.dto.responses.PaginationResponse;
 import com.example.flashcards.service.CardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +43,14 @@ public class CardController {
     @GetMapping("{cardId}")
     public CardDto getCard(@PathVariable long cardId, @PathVariable long setId, Authentication auth) {
         return cardService.getCardById(cardId, setId, auth);
+    }
+
+    @GetMapping
+    public PaginationResponse<CardDto> getCards(
+            @PathVariable long setId,
+            @Valid PaginationRequest pagination,
+            Authentication auth
+    ) {
+        return cardService.getCards(setId, auth, pagination);
     }
 }
