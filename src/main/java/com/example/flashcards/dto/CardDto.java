@@ -17,7 +17,7 @@ public class CardDto {
     private String back;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
