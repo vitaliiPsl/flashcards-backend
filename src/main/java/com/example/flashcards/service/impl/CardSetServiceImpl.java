@@ -10,9 +10,9 @@ import com.example.flashcards.model.User;
 import com.example.flashcards.repository.CardSetRepository;
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.service.CardSetService;
+import com.example.flashcards.service.utils.DtoMappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class CardSetServiceImpl implements CardSetService {
     private final CardSetRepository cardSetRepository;
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper;
+    private final DtoMappers mappers;
 
     @Override
     public CardSetDto saveSet(CardSetDto cardSetDto, Authentication authentication) {
@@ -40,13 +40,13 @@ public class CardSetServiceImpl implements CardSetService {
             throw new ResourceAlreadyExist(setName, CardSet.class);
         }
 
-        CardSet set = mapCardSetDtoToCardSet(cardSetDto);
+        CardSet set = mappers.mapCardSetDtoToCardSet(cardSetDto);
         set.setAuthor(user);
         set.setCreatedAt(LocalDateTime.now());
         set.getCards().forEach(card -> card.setSet(set));
 
         CardSet saved = cardSetRepository.save(set);
-        return mapCardSetToCardSetDto(saved);
+        return mappers.mapCardSetToCardSetDto(saved);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CardSetServiceImpl implements CardSetService {
     public CardSetDto replaceSet(long id, CardSetDto cardSetDto, Authentication authentication) {
         CardSet existingSet = getSetAndVerifyAuthor(id, authentication);
 
-        CardSet set = mapCardSetDtoToCardSet(cardSetDto);
+        CardSet set = mappers.mapCardSetDtoToCardSet(cardSetDto);
         set.setId(id);
         set.setAuthor(existingSet.getAuthor());
         set.setCreatedAt(existingSet.getCreatedAt());
@@ -68,36 +68,36 @@ public class CardSetServiceImpl implements CardSetService {
 
         cardSetRepository.save(set);
 
-        return mapCardSetToCardSetDto(set);
+        return mappers.mapCardSetToCardSetDto(set);
     }
 
     @Override
     public CardSetDto getSetById(long id, Authentication authentication) {
 
         Optional<CardSet> optionalSet = cardSetRepository.findById(id);
-        if(optionalSet.isEmpty()) {
+        if (optionalSet.isEmpty()) {
             throw new ResourceNotFound(id, CardSet.class);
         }
 
         User user = getUser(authentication);
         CardSet set = optionalSet.get();
-        if(!set.getAuthor().equals(user) && set.getType() == SetType.PRIVATE) {
+        if (!set.getAuthor().equals(user) && set.getType() == SetType.PRIVATE) {
             throw new ResourceNotAccessible(id, user, CardSet.class);
         }
 
-        return mapCardSetToCardSetDto(set);
+        return mappers.mapCardSetToCardSetDto(set);
     }
 
     private CardSet getSetAndVerifyAuthor(long id, Authentication authentication) {
         User user = getUser(authentication);
 
         Optional<CardSet> optionalCardSet = cardSetRepository.findById(id);
-        if(optionalCardSet.isEmpty()) {
+        if (optionalCardSet.isEmpty()) {
             throw new ResourceNotFound(id, CardSet.class);
         }
 
         CardSet cardSet = optionalCardSet.get();
-        if(!cardSet.getAuthor().equals(user)) {
+        if (!cardSet.getAuthor().equals(user)) {
             throw new ResourceNotAccessible(id, user, CardSet.class);
         }
 
@@ -108,13 +108,5 @@ public class CardSetServiceImpl implements CardSetService {
         String email = authentication.getName();
 
         return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFound(email, User.class));
-    }
-
-    private CardSet mapCardSetDtoToCardSet(CardSetDto cardSetDto) {
-        return modelMapper.map(cardSetDto, CardSet.class);
-    }
-
-    private CardSetDto mapCardSetToCardSetDto(CardSet cardSet) {
-        return modelMapper.map(cardSet, CardSetDto.class);
     }
 }

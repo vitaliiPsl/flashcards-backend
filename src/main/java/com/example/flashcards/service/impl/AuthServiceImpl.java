@@ -8,9 +8,9 @@ import com.example.flashcards.model.User;
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.service.AuthService;
 import com.example.flashcards.service.JwtService;
+import com.example.flashcards.service.utils.DtoMappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
-    private final ModelMapper modelMapper;
+    private final DtoMappers mappers;
 
     @Override
     public AuthResponse signIn(AuthRequest authRequest) {
@@ -47,24 +47,23 @@ public class AuthServiceImpl implements AuthService {
     public UserDto signUp(UserDto userDto) {
         log.debug("Register new user: {}", userDto);
 
-        User user = mapUserDtoToUser(userDto);
+        User user = mappers.mapUserDtoToUser(userDto);
         System.out.println(user);
 
         Optional<User> possibleUser = userRepository.findByEmail(user.getEmail());
-        if(possibleUser.isPresent()) {
+        if (possibleUser.isPresent()) {
             log.warn("User with email: '{}' already exists", user.getEmail());
             throw new ResourceAlreadyExist(user.getEmail(), User.class);
         }
 
         possibleUser = userRepository.findByUsername(user.getUsername());
-        if(possibleUser.isPresent()) {
+        if (possibleUser.isPresent()) {
             log.warn("User with username: '{}' already exists", user.getUsername());
             throw new ResourceAlreadyExist(user.getUsername(), User.class);
         }
 
         user = saveNewUser(user);
-
-        return mapUserToUserDto(user);
+        return mappers.mapUserToUserDto(user);
     }
 
     private User saveNewUser(User user) {
@@ -74,13 +73,5 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
         return user;
-    }
-
-    private User mapUserDtoToUser(UserDto userDto) {
-        return modelMapper.map(userDto, User.class);
-    }
-
-    private UserDto mapUserToUserDto(User user) {
-        return modelMapper.map(user, UserDto.class);
     }
 }

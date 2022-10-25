@@ -13,9 +13,9 @@ import com.example.flashcards.repository.CardRepository;
 import com.example.flashcards.repository.CardSetRepository;
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.service.CardService;
+import com.example.flashcards.service.utils.DtoMappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,22 +35,22 @@ public class CardServiceImpl implements CardService {
     private final CardSetRepository setRepository;
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper;
+    private final DtoMappers mappers;
 
     @Override
     public CardDto saveCard(long setId, CardDto cardDto, Authentication auth) {
         CardSet set = getSetAndVerifyAuthor(setId, auth);
 
-        Card card = mapCardDtoToCard(cardDto);
+        Card card = mappers.mapCardDtoToCard(cardDto);
         card.setSet(set);
         card.setCreatedAt(LocalDateTime.now());
 
-        if(set.getCards().contains(card)) {
+        if (set.getCards().contains(card)) {
             throw new ResourceAlreadyExist(card.getFront(), Card.class);
         }
 
         Card saved = cardRepository.save(card);
-        return mapCardToCardDto(saved);
+        return mappers.mapCardToCardDto(saved);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class CardServiceImpl implements CardService {
     public CardDto replaceCard(long cardId, long setId, CardDto cardDto, Authentication auth) {
         Card existing = getCardVerifySetAndAuthor(cardId, setId, auth);
 
-        Card card = mapCardDtoToCard(cardDto);
+        Card card = mappers.mapCardDtoToCard(cardDto);
         card.setId(cardId);
         card.setSet(existing.getSet());
         card.setCreatedAt(existing.getCreatedAt());
         card.setUpdatedAt(LocalDateTime.now());
 
         Card saved = cardRepository.save(card);
-        return mapCardToCardDto(saved);
+        return mappers.mapCardToCardDto(saved);
     }
 
     @Override
@@ -79,16 +79,16 @@ public class CardServiceImpl implements CardService {
         CardSet set = getSet(setId);
         Card card = getCard(cardId);
 
-        if(!belongsToSet(set, card)) {
+        if (!belongsToSet(set, card)) {
             throw new ResourceNotAccessible(cardId, Card.class);
         }
 
         User user = getUser(auth);
-        if(!isSetAuthor(user, set) && set.isPrivate()) {
+        if (!isSetAuthor(user, set) && set.isPrivate()) {
             throw new ResourceNotAccessible(setId, CardSet.class);
         }
 
-        return mapCardToCardDto(card);
+        return mappers.mapCardToCardDto(card);
     }
 
     @Override
@@ -96,12 +96,12 @@ public class CardServiceImpl implements CardService {
         CardSet set = getSet(setId);
 
         User user = getUser(auth);
-        if(!isSetAuthor(user, set) && set.isPrivate()) {
+        if (!isSetAuthor(user, set) && set.isPrivate()) {
             throw new ResourceNotAccessible(setId, CardSet.class);
         }
 
         PageRequest page = PageRequest.of(pagination.getPage(), pagination.getSize(), Sort.by("createdAt"));
-        Page<CardDto> cardDtoPage = cardRepository.findBySet(set, page).map(this::mapCardToCardDto);
+        Page<CardDto> cardDtoPage = cardRepository.findBySet(set, page).map(mappers::mapCardToCardDto);
 
         return new PaginationResponse<>(cardDtoPage, pagination);
     }
@@ -110,7 +110,7 @@ public class CardServiceImpl implements CardService {
         CardSet set = getSetAndVerifyAuthor(setId, auth);
         Card card = getCard(cardId);
 
-        if(!belongsToSet(set, card)) {
+        if (!belongsToSet(set, card)) {
             throw new ResourceNotAccessible(cardId, Card.class);
         }
 
@@ -121,7 +121,7 @@ public class CardServiceImpl implements CardService {
         User user = getUser(auth);
         CardSet set = getSet(setId);
 
-        if(!isSetAuthor(user, set)) {
+        if (!isSetAuthor(user, set)) {
             throw new ResourceNotAccessible(setId, user, CardSet.class);
         }
 
@@ -147,13 +147,5 @@ public class CardServiceImpl implements CardService {
 
     private static boolean belongsToSet(CardSet set, Card card) {
         return card.getSet().equals(set);
-    }
-
-    private Card mapCardDtoToCard(CardDto cardDto) {
-        return modelMapper.map(cardDto, Card.class);
-    }
-
-    private CardDto mapCardToCardDto(Card card) {
-        return modelMapper.map(card, CardDto.class);
     }
 }
