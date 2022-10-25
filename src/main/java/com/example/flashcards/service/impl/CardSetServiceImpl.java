@@ -1,9 +1,11 @@
 package com.example.flashcards.service.impl;
 
+import com.example.flashcards.dto.CardDto;
 import com.example.flashcards.dto.CardSetDto;
 import com.example.flashcards.exceptions.ResourceAlreadyExist;
 import com.example.flashcards.exceptions.ResourceNotAccessible;
 import com.example.flashcards.exceptions.ResourceNotFound;
+import com.example.flashcards.model.Card;
 import com.example.flashcards.model.CardSet;
 import com.example.flashcards.model.SetType;
 import com.example.flashcards.model.User;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +47,9 @@ public class CardSetServiceImpl implements CardSetService {
         CardSet set = mappers.mapCardSetDtoToCardSet(cardSetDto);
         set.setAuthor(user);
         set.setCreatedAt(LocalDateTime.now());
-        set.getCards().forEach(card -> card.setSet(set));
+
+        Set<Card> cards = mapCards(set, cardSetDto.getCards());
+        set.setCards(cards);
 
         CardSet saved = cardSetRepository.save(set);
         return mappers.mapCardSetToCardSetDto(saved);
@@ -66,8 +72,10 @@ public class CardSetServiceImpl implements CardSetService {
         set.setCreatedAt(existingSet.getCreatedAt());
         set.setUpdatedAt(LocalDateTime.now());
 
-        cardSetRepository.save(set);
+        Set<Card> cards = mapCards(set, cardSetDto.getCards());
+        set.setCards(cards);
 
+        cardSetRepository.save(set);
         return mappers.mapCardSetToCardSetDto(set);
     }
 
@@ -86,6 +94,18 @@ public class CardSetServiceImpl implements CardSetService {
         }
 
         return mappers.mapCardSetToCardSetDto(set);
+    }
+
+    private Set<Card> mapCards(CardSet cardSet, Set<CardDto> cardsDto) {
+        return cardsDto.stream().map(cardDto -> mapCard(cardSet, cardDto)).collect(Collectors.toSet());
+    }
+
+    private Card mapCard(CardSet cardSet, CardDto cardDto) {
+        Card card = mappers.mapCardDtoToCard(cardDto);
+        card.setSet(cardSet);
+        card.setCreatedAt(LocalDateTime.now());
+
+        return card;
     }
 
     private CardSet getSetAndVerifyAuthor(long id, Authentication authentication) {
