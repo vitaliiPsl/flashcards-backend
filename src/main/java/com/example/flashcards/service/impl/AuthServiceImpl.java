@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -48,7 +49,6 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Register new user: {}", userDto);
 
         User user = mappers.mapUserDtoToUser(userDto);
-        System.out.println(user);
 
         Optional<User> possibleUser = userRepository.findByEmail(user.getEmail());
         if (possibleUser.isPresent()) {
@@ -70,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setEnabled(true);
+        user.setCreateAt(LocalDateTime.now());
 
         user = userRepository.save(user);
         return user;

@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 public class UserDto {
@@ -23,6 +24,15 @@ public class UserDto {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Minimal number of symbols in password is 8")
     private String password;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private boolean enabled;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime createAt;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime updatedAt;
 
     public String getUsername() {
         return username == null ? email : username;

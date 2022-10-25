@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
     private String password;
+
+    private LocalDateTime createAt;
+    private LocalDateTime updatedAt;
 
     private boolean enabled;
 
