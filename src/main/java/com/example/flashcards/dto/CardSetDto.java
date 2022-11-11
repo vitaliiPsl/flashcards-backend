@@ -1,6 +1,7 @@
 package com.example.flashcards.dto;
 
 import com.example.flashcards.model.SetType;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class CardSetDto {
     private long id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIncludeProperties({"id", "username"})
     private UserDto author;
 
     @NotBlank(message = "The name of the set is required")
