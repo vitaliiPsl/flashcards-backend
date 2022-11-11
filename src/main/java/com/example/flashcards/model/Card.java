@@ -24,6 +24,7 @@ public class Card {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     @ToString.Exclude
