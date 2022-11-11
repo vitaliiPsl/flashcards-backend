@@ -2,9 +2,11 @@ package com.example.flashcards.service.utils;
 
 import com.example.flashcards.dto.CardDto;
 import com.example.flashcards.dto.CardSetDto;
+import com.example.flashcards.dto.learning.QuestionDto;
 import com.example.flashcards.dto.UserDto;
 import com.example.flashcards.model.Card;
 import com.example.flashcards.model.CardSet;
+import com.example.flashcards.model.learning.Question;
 import com.example.flashcards.model.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -37,5 +39,9 @@ public class DtoMappers {
 
     public CardDto mapCardToCardDto(Card card) {
         return modelMapper.map(card, CardDto.class);
+    }
+
+    public QuestionDto mapQuestionToQuestionDto(Question question) {
+        return modelMapper.map(question, QuestionDto.class);
     }
 }
