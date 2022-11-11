@@ -1,6 +1,8 @@
 package com.example.flashcards.model;
 
+import com.example.flashcards.model.learning.Difficulty;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +24,9 @@ public class Card {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private Difficulty difficulty;
+
+    @ToString.Exclude
     @ManyToOne
     private CardSet set;
 
