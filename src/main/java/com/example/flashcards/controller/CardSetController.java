@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
@@ -19,22 +20,27 @@ public class CardSetController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CardSetDto saveSet(@RequestBody @Valid CardSetDto cardSetDto, Authentication authentication) {
-        return cardSetService.saveSet(cardSetDto, authentication);
+    public CardSetDto saveSet(@RequestBody @Valid CardSetDto cardSetDto, Authentication auth) {
+        return cardSetService.saveSet(cardSetDto, auth);
     }
 
     @PutMapping("{id}")
-    public CardSetDto replaceSet(@PathVariable long id, @RequestBody @Valid CardSetDto cardSetDto, Authentication authentication) {
-        return cardSetService.replaceSet(id, cardSetDto, authentication);
+    public CardSetDto replaceSet(@PathVariable long id, @RequestBody @Valid CardSetDto cardSetDto, Authentication auth) {
+        return cardSetService.replaceSet(id, cardSetDto, auth);
     }
 
     @DeleteMapping("{id}")
-    public void deleteSet(@PathVariable long id, Authentication authentication) {
-        cardSetService.deleteSet(id, authentication);
+    public void deleteSet(@PathVariable long id, Authentication auth) {
+        cardSetService.deleteSet(id, auth);
     }
 
     @GetMapping("{id}")
-    public CardSetDto getSet(@PathVariable long id, Authentication authentication) {
-        return cardSetService.getSetById(id, authentication);
+    public CardSetDto getSet(@PathVariable long id, Authentication auth) {
+        return cardSetService.getSetById(id, auth);
+    }
+
+    @GetMapping(params = "authorId")
+    public List<CardSetDto> getSets(@RequestParam(required = false) long authorId, Authentication auth) {
+        return cardSetService.getSetsByAuthor(authorId, auth);
     }
 }
