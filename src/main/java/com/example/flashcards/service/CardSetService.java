@@ -3,6 +3,8 @@ package com.example.flashcards.service;
 import com.example.flashcards.dto.CardSetDto;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
+
 /**
  * Business logic for the card sets
  */
@@ -44,4 +46,13 @@ public interface CardSetService {
      * or the card set is not accessible for the current user
      */
     CardSetDto getSetById(long id, Authentication authentication);
+
+    /**
+     * Retrieve sets create by author with provided id
+     *
+     * @param authorId id of the author
+     * @param authentication logged in user
+     * @return list of sets created by given author
+     */
+    List<CardSetDto> getSetsByAuthor(long authorId, Authentication authentication);
 }

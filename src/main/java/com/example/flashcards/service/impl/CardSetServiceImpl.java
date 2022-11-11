@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,6 +95,26 @@ public class CardSetServiceImpl implements CardSetService {
         }
 
         return mappers.mapCardSetToCardSetDto(set);
+    }
+
+    @Override
+    public List<CardSetDto> getSetsByAuthor(long authorId, Authentication auth) {
+        log.info("Get sets made by author with id {}", authorId);
+
+        User author = getUser(authorId);
+        User authenticatedUser = getUser(auth);
+
+        List<CardSet> sets;
+
+        if (!author.equals(authenticatedUser)) {
+            log.info("Get public sets of author with id {}", authorId);
+            sets = cardSetRepository.findByAuthorAndType(author, SetType.PUBLIC);
+        } else {
+            log.info("Get all sets of author with id {}", authorId);
+            sets = cardSetRepository.findByAuthor(author);
+        }
+
+        return sets.stream().map(mappers::mapCardSetToCardSetDto).collect(Collectors.toList());
     }
 
     private Set<Card> mapCards(CardSet cardSet, Set<CardDto> cardsDto) {
