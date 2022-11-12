@@ -79,6 +79,15 @@ public class ErrorHandlerController {
         return buildResponseEntity(apiError);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    protected ResponseEntity<ApiError> handleIllegalArgumentException(IllegalStateException e) {
+        log.error("handleIllegalStateException: {}", e.getMessage(), e);
+
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(e.getMessage());
+
+        return buildResponseEntity(apiError);
+    }
 
     @ExceptionHandler(ResourceNotFound.class)
     protected ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFound e) {
