@@ -16,7 +16,7 @@ public class CardSetDto {
     private long id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonIncludeProperties({"id", "username"})
+    @JsonIncludeProperties({"id", "nickname"})
     private UserDto author;
 
     @NotBlank(message = "The name of the set is required")
