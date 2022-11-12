@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResourceAlreadyExist(user.getEmail(), User.class);
         }
 
-        possibleUser = userRepository.findByUsername(user.getUsername());
+        possibleUser = userRepository.findByNickname(user.getUsername());
         if (possibleUser.isPresent()) {
             log.warn("User with username: '{}' already exists", user.getUsername());
             throw new ResourceAlreadyExist(user.getUsername(), User.class);
@@ -71,6 +71,10 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(encodedPassword);
         user.setEnabled(true);
         user.setCreateAt(LocalDateTime.now());
+
+        if(user.getNickname() == null) {
+            user.setNickname(user.getEmail());
+        }
 
         user = userRepository.save(user);
         return user;

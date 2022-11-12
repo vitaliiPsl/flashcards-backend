@@ -14,7 +14,7 @@ public class UserDto {
     private long id;
 
     @Size(min = 3, max = 20, message = "Length of the username must be between 3 and 20 symbols")
-    private String username;
+    private String nickname;
 
     @NotBlank(message = "Email address is required")
     @Email(message = "Must be a valid email address")
@@ -33,8 +33,4 @@ public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
-
-    public String getUsername() {
-        return username == null ? email : username;
-    }
 }

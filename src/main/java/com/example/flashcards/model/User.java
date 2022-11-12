@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "person", indexes = {
-        @Index(name = "idx_user_username", columnList = "username", unique = true),
+        @Index(name = "idx_user_nickname", columnList = "nickname", unique = true),
         @Index(name = "idx_user_email", columnList = "email", unique = true)
 })
 public class User implements UserDetails {
@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private long id;
 
     @Column(nullable = false)
-    private String username;
+    private String nickname;
 
     @Column(nullable = false)
     private String email;
