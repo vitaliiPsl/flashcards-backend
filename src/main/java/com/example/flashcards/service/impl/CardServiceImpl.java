@@ -9,6 +9,7 @@ import com.example.flashcards.exceptions.ResourceNotFound;
 import com.example.flashcards.model.Card;
 import com.example.flashcards.model.CardSet;
 import com.example.flashcards.model.User;
+import com.example.flashcards.model.learning.Difficulty;
 import com.example.flashcards.repository.CardRepository;
 import com.example.flashcards.repository.CardSetRepository;
 import com.example.flashcards.repository.UserRepository;
@@ -43,6 +44,7 @@ public class CardServiceImpl implements CardService {
 
         Card card = mappers.mapCardDtoToCard(cardDto);
         card.setSet(set);
+        card.setDifficulty(Difficulty.HARD);
         card.setCreatedAt(LocalDateTime.now());
 
         if (set.getCards().contains(card)) {
