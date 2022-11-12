@@ -1,9 +1,9 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.api.AuthApi;
-import com.example.flashcards.dto.UserDto;
-import com.example.flashcards.dto.requests.AuthRequest;
-import com.example.flashcards.dto.responses.AuthResponse;
+import com.example.flashcards.dto.user.UserDto;
+import com.example.flashcards.dto.auth.AuthRequest;
+import com.example.flashcards.dto.auth.AuthResponse;
 import com.example.flashcards.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;

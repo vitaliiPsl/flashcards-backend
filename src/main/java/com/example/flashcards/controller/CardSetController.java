@@ -1,7 +1,7 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.api.SetApi;
-import com.example.flashcards.dto.CardSetDto;
+import com.example.flashcards.dto.set.CardSetDto;
 import com.example.flashcards.service.CardSetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,5 @@
-package com.example.flashcards.dto.responses;
+package com.example.flashcards.dto.pagination;
 
-import com.example.flashcards.dto.requests.PaginationRequest;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 

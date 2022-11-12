@@ -1,6 +1,6 @@
 package com.example.flashcards.api;
 
-import com.example.flashcards.dto.UserDto;
+import com.example.flashcards.dto.user.UserDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

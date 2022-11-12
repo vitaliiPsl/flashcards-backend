@@ -1,4 +1,4 @@
-package com.example.flashcards.dto.requests;
+package com.example.flashcards.dto.pagination;
 
 import lombok.Data;
 

@@ -1,5 +1,7 @@
-package com.example.flashcards.dto;
+package com.example.flashcards.dto.set;
 
+import com.example.flashcards.dto.user.UserDto;
+import com.example.flashcards.dto.card.CardDto;
 import com.example.flashcards.model.SetType;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

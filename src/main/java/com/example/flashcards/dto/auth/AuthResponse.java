@@ -1,4 +1,4 @@
-package com.example.flashcards.dto.responses;
+package com.example.flashcards.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

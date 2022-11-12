@@ -1,6 +1,6 @@
 package com.example.flashcards.service;
 
-import com.example.flashcards.dto.CardSetDto;
+import com.example.flashcards.dto.set.CardSetDto;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;

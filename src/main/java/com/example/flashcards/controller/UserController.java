@@ -1,7 +1,7 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.api.UserApi;
-import com.example.flashcards.dto.UserDto;
+import com.example.flashcards.dto.user.UserDto;
 import com.example.flashcards.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

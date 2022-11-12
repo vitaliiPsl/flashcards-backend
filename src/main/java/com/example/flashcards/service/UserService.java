@@ -1,6 +1,6 @@
 package com.example.flashcards.service;
 
-import com.example.flashcards.dto.UserDto;
+import com.example.flashcards.dto.user.UserDto;
 import org.springframework.security.core.Authentication;
 
 /**

@@ -1,9 +1,9 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.api.CardApi;
-import com.example.flashcards.dto.CardDto;
-import com.example.flashcards.dto.requests.PaginationRequest;
-import com.example.flashcards.dto.responses.PaginationResponse;
+import com.example.flashcards.dto.card.CardDto;
+import com.example.flashcards.dto.pagination.PaginationRequest;
+import com.example.flashcards.dto.pagination.PaginationResponse;
 import com.example.flashcards.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

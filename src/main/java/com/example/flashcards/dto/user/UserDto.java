@@ -1,4 +1,4 @@
-package com.example.flashcards.dto;
+package com.example.flashcards.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

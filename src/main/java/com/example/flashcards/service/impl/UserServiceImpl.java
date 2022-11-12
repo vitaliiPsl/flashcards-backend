@@ -1,6 +1,6 @@
 package com.example.flashcards.service.impl;
 
-import com.example.flashcards.dto.UserDto;
+import com.example.flashcards.dto.user.UserDto;
 import com.example.flashcards.exceptions.ResourceNotFound;
 import com.example.flashcards.model.User;
 import com.example.flashcards.repository.UserRepository;

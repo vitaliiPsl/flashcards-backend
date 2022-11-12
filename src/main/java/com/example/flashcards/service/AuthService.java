@@ -1,8 +1,8 @@
 package com.example.flashcards.service;
 
-import com.example.flashcards.dto.UserDto;
-import com.example.flashcards.dto.requests.AuthRequest;
-import com.example.flashcards.dto.responses.AuthResponse;
+import com.example.flashcards.dto.user.UserDto;
+import com.example.flashcards.dto.auth.AuthRequest;
+import com.example.flashcards.dto.auth.AuthResponse;
 
 /**
  * Authentication service
