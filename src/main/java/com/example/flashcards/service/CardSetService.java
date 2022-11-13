@@ -1,9 +1,9 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.dto.pagination.PaginationRequest;
+import com.example.flashcards.dto.pagination.PaginationResponse;
 import com.example.flashcards.dto.set.CardSetDto;
 import org.springframework.security.core.Authentication;
-
-import java.util.List;
 
 /**
  * Business logic for the card sets
@@ -48,11 +48,38 @@ public interface CardSetService {
     CardSetDto getSetById(long id, Authentication authentication);
 
     /**
-     * Retrieve sets create by author with provided id
+     * Retrieve sets created by author with provided id
      *
      * @param authorId id of the author
-     * @param authentication logged in user
-     * @return list of sets created by given author
+     * @param auth     logged in user
+     * @return retrieved sets
      */
-    List<CardSetDto> getSetsByAuthor(long authorId, Authentication authentication);
+    PaginationResponse<CardSetDto> getSetsByAuthor(long authorId, PaginationRequest pagination, Authentication auth);
+
+    /**
+     * Retrieve sets with given name
+     *
+     * @param name       name of the sets
+     * @param pagination pagination request
+     * @return retrieved sets
+     */
+    PaginationResponse<CardSetDto> getPublicSetsByName(String name, PaginationRequest pagination);
+
+    /**
+     * Retrieve sets by author and name
+     * @param authorId id of the author
+     * @param name name of the sets
+     * @param pagination pagination request
+     * @param auth authentication
+     * @return retrieved sets
+     */
+    PaginationResponse<CardSetDto> getSetsByAuthorAndName(long authorId, String name, PaginationRequest pagination, Authentication auth);
+
+    /**
+     * Retrieve public sets
+     *
+     * @param pagination pagination request
+     * @return retrieved sets
+     */
+    PaginationResponse<CardSetDto> getPublicSets(PaginationRequest pagination);
 }

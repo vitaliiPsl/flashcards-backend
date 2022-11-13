@@ -1,11 +1,16 @@
 package com.example.flashcards.service.impl;
 
 import com.example.flashcards.dto.card.CardDto;
+import com.example.flashcards.dto.pagination.PaginationRequest;
+import com.example.flashcards.dto.pagination.PaginationResponse;
 import com.example.flashcards.dto.set.CardSetDto;
 import com.example.flashcards.exceptions.ResourceAlreadyExist;
 import com.example.flashcards.exceptions.ResourceNotAccessible;
 import com.example.flashcards.exceptions.ResourceNotFound;
-import com.example.flashcards.model.*;
+import com.example.flashcards.model.Card;
+import com.example.flashcards.model.CardSet;
+import com.example.flashcards.model.SetType;
+import com.example.flashcards.model.User;
 import com.example.flashcards.model.learning.Difficulty;
 import com.example.flashcards.repository.CardSetRepository;
 import com.example.flashcards.repository.UserRepository;
@@ -13,12 +18,13 @@ import com.example.flashcards.service.CardSetService;
 import com.example.flashcards.service.utils.DtoMappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,23 +106,69 @@ public class CardSetServiceImpl implements CardSetService {
     }
 
     @Override
-    public List<CardSetDto> getSetsByAuthor(long authorId, Authentication auth) {
+    public PaginationResponse<CardSetDto> getSetsByAuthor(long authorId, PaginationRequest pagination, Authentication auth) {
         log.info("Get sets made by author with id {}", authorId);
 
         User author = getUser(authorId);
         User authenticatedUser = getUser(auth);
 
-        List<CardSet> sets;
+        PageRequest pageRequest = PageRequest.of(pagination.getPage(), pagination.getSize());
 
+        Page<CardSet> sets;
         if (!author.equals(authenticatedUser)) {
             log.info("Get public sets of author with id {}", authorId);
-            sets = cardSetRepository.findByAuthorAndType(author, SetType.PUBLIC);
+            sets = cardSetRepository.findByAuthorAndType(author, SetType.PUBLIC, pageRequest);
         } else {
             log.info("Get all sets of author with id {}", authorId);
-            sets = cardSetRepository.findByAuthor(author);
+            sets = cardSetRepository.findByAuthor(author, pageRequest);
         }
 
-        return sets.stream().map(mappers::mapCardSetToCardSetDto).collect(Collectors.toList());
+        Page<CardSetDto> setDtos = sets.map(mappers::mapCardSetToCardSetDto);
+        return new PaginationResponse<>(setDtos, pagination);
+    }
+
+    @Override
+    public PaginationResponse<CardSetDto> getPublicSetsByName(String name, PaginationRequest pagination) {
+        log.info("Get sets with name {}'", name);
+
+        PageRequest pageRequest = PageRequest.of(pagination.getPage(), pagination.getSize());
+        Page<CardSetDto> setDtos = cardSetRepository.findByNameContainingIgnoreCaseAndType(name, SetType.PUBLIC, pageRequest)
+                .map(mappers::mapCardSetToCardSetDto);
+
+        return new PaginationResponse<>(setDtos, pagination);
+    }
+
+    @Override
+    public PaginationResponse<CardSetDto> getSetsByAuthorAndName(long authorId, String name, PaginationRequest pagination, Authentication auth) {
+        log.info("Get sets made by author with id {} and with name '{}'", authorId, name);
+
+        User author = getUser(authorId);
+        User authenticatedUser = getUser(auth);
+
+        PageRequest pageRequest = PageRequest.of(pagination.getPage(), pagination.getSize());
+
+        Page<CardSet> sets;
+        if (!author.equals(authenticatedUser)) {
+            log.info("Get public sets of author with id {}", authorId);
+            sets = cardSetRepository.findByAuthorAndNameContainingIgnoreCaseAndType(author, name, SetType.PUBLIC, pageRequest);
+        } else {
+            log.info("Get all sets of author with id {}", authorId);
+            sets = cardSetRepository.findByAuthorAndNameContainingIgnoreCase(author, name, pageRequest);
+        }
+
+        Page<CardSetDto> setDtos = sets.map(mappers::mapCardSetToCardSetDto);
+        return new PaginationResponse<>(setDtos, pagination);
+    }
+
+    @Override
+    public PaginationResponse<CardSetDto> getPublicSets(PaginationRequest pagination) {
+        log.info("Get public sets");
+
+        PageRequest pageRequest = PageRequest.of(pagination.getPage(), pagination.getSize());
+        Page<CardSetDto> setDtos = cardSetRepository.findByType(SetType.PUBLIC, pageRequest)
+                .map(mappers::mapCardSetToCardSetDto);
+
+        return new PaginationResponse<>(setDtos, pagination);
     }
 
     private Set<Card> mapCards(CardSet cardSet, Set<CardDto> cardsDto) {
