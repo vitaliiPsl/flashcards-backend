@@ -1,6 +1,5 @@
 package com.example.flashcards.api;
 
-import com.example.flashcards.dto.pagination.PaginationRequest;
 import com.example.flashcards.dto.pagination.PaginationResponse;
 import com.example.flashcards.dto.set.CardSetDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,7 +31,8 @@ public interface SetApi {
     PaginationResponse<CardSetDto> getSets(
             @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) String name,
-            PaginationRequest pagination,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             Authentication auth
     );
 }

@@ -30,7 +30,9 @@ public class CardSetController implements SetApi {
         return cardSetService.getSetById(id, auth);
     }
 
-    public PaginationResponse<CardSetDto> getSets(Long authorId, String name, PaginationRequest pagination, Authentication auth) {
+    public PaginationResponse<CardSetDto> getSets(Long authorId, String name, int page, int size, Authentication auth) {
+        PaginationRequest pagination = new PaginationRequest(page, size);
+
         if (authorId != null && name != null) {
             return cardSetService.getSetsByAuthorAndName(authorId, name, pagination, auth);
         } else if (authorId != null) {
