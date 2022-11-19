@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+flashcards-db/db.mv.db
 
 ### STS ###
 .apt_generated
