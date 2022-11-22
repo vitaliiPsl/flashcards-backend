@@ -1,13 +1,15 @@
 package com.example.flashcards.model;
 
 import com.example.flashcards.model.learning.Difficulty;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "flash_card", uniqueConstraints = {

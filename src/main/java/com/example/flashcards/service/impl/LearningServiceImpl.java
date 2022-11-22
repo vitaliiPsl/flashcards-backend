@@ -81,14 +81,18 @@ public class LearningServiceImpl implements LearningService {
     }
 
     private QuestionDto verifyAnswer(Question question, QuestionAnswerDto questionAnswerDto) {
+        log.info("Verify question answer. Answer: {}. Correct answer: {}", questionAnswerDto.getAnswer(), question.getCorrectAnswer());
+
         String correctAnswer = question.getCorrectAnswer();
         String answer = questionAnswerDto.getAnswer();
 
         if (correctAnswer.equals(answer)) {
-            incrementCardDifficulty(question.getCard());
+            log.info("Provided answer is correct");
+            decrementCardDifficulty(question.getCard());
             question.setCorrect(true);
         } else {
-            decrementCardDifficulty(question.getCard());
+            log.info("Provided answer isn't correct");
+            incrementCardDifficulty(question.getCard());
             question.setCorrect(false);
         }
 
@@ -159,7 +163,7 @@ public class LearningServiceImpl implements LearningService {
         }
     }
 
-    private static Map<Difficulty, List<Card>> groupByProgress(List<Card> cards) {
+    private static Map<Difficulty, List<Card>> groupByDifficulty(List<Card> cards) {
         return cards.stream().collect(Collectors.groupingBy(Card::getDifficulty));
     }
 
@@ -184,7 +188,7 @@ public class LearningServiceImpl implements LearningService {
         return cards.get(new Random().nextInt(cards.size()));
     }
 
-    private void incrementCardDifficulty(Card card) {
+    private void decrementCardDifficulty(Card card) {
         Difficulty difficulty = card.getDifficulty();
 
         if (difficulty == Difficulty.HARD) {
@@ -194,13 +198,13 @@ public class LearningServiceImpl implements LearningService {
         }
     }
 
-    private void decrementCardDifficulty(Card card) {
+    private void incrementCardDifficulty(Card card) {
         Difficulty difficulty = card.getDifficulty();
 
         if (difficulty == Difficulty.GOOD) {
             card.setDifficulty(Difficulty.HARD);
         } else if(difficulty == Difficulty.EASY) {
-            card.setDifficulty(Difficulty.EASY);
+            card.setDifficulty(Difficulty.GOOD);
         }
     }
 
