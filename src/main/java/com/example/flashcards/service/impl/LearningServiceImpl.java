@@ -129,12 +129,34 @@ public class LearningServiceImpl implements LearningService {
     }
 
     private Card selectCardToStudy(List<Card> cards) {
-        Map<Difficulty, List<Card>> buckets = groupByProgress(cards);
-        if (buckets.size() == 1) {
-            return selectRandomCard(cards);
-        }
+        Map<Difficulty, List<Card>> buckets = groupByDifficulty(cards);
 
-        return selectRandomCard(cards);
+        double random = Math.random();
+        if(random <= Difficulty.HARD.getDistribution()) {
+            if(buckets.containsKey(Difficulty.HARD)) {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            } else if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            }
+        } else if(random < Difficulty.GOOD.getDistribution()) {
+            if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else if(buckets.containsKey(Difficulty.HARD)) {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            }
+        } else {
+            if(buckets.containsKey(Difficulty.EASY)) {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            } else if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            }
+        }
     }
 
     private static Map<Difficulty, List<Card>> groupByProgress(List<Card> cards) {
