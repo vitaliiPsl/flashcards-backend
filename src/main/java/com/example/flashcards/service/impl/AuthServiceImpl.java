@@ -48,25 +48,25 @@ public class AuthServiceImpl implements AuthService {
     public UserDto signUp(UserDto userDto) {
         log.debug("Register new user: {}", userDto);
 
-        User user = mappers.mapUserDtoToUser(userDto);
-
-        Optional<User> possibleUser = userRepository.findByEmail(user.getEmail());
+        Optional<User> possibleUser = userRepository.findByEmail(userDto.getEmail());
         if (possibleUser.isPresent()) {
-            log.warn("User with email: '{}' already exists", user.getEmail());
-            throw new ResourceAlreadyExist(user.getEmail(), User.class);
+            log.warn("User with email: '{}' already exists", userDto.getEmail());
+            throw new ResourceAlreadyExist(userDto.getEmail(), User.class);
         }
 
-        possibleUser = userRepository.findByNickname(user.getUsername());
+        possibleUser = userRepository.findByNickname(userDto.getNickname());
         if (possibleUser.isPresent()) {
-            log.warn("User with username: '{}' already exists", user.getUsername());
-            throw new ResourceAlreadyExist(user.getUsername(), User.class);
+            log.warn("User with username: '{}' already exists", userDto.getNickname());
+            throw new ResourceAlreadyExist(userDto.getNickname(), User.class);
         }
 
-        user = saveNewUser(user);
+        User user = saveNewUser(userDto);
         return mappers.mapUserToUserDto(user);
     }
 
-    private User saveNewUser(User user) {
+    private User saveNewUser(UserDto userDto) {
+        User user = mappers.mapUserDtoToUser(userDto);
+
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setEnabled(true);
