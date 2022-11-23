@@ -17,12 +17,11 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final DtoMappers mappers;
 
-    @Transactional(readOnly = true)
     @Override
     public UserDto getUserById(long id) {
         log.info("Get user by id: {}", id);
@@ -36,7 +35,6 @@ public class UserServiceImpl implements UserService {
         return mappers.mapUserToUserDto(optionalUser.get());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public UserDto getAuthenticatedUser(Authentication auth) {
         log.info("Get authenticated user: {}", auth);
