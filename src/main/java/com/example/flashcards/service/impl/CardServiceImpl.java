@@ -93,21 +93,6 @@ public class CardServiceImpl implements CardService {
         return mappers.mapCardToCardDto(card);
     }
 
-    @Override
-    public PaginationResponse<CardDto> getCards(long setId, Authentication auth, PaginationRequest pagination) {
-        CardSet set = getSet(setId);
-
-        User user = getUser(auth);
-        if (!isSetAuthor(user, set) && set.isPrivate()) {
-            throw new ResourceNotAccessible(setId, CardSet.class);
-        }
-
-        PageRequest page = PageRequest.of(pagination.getPage(), pagination.getSize(), Sort.by("createdAt"));
-        Page<CardDto> cardDtoPage = cardRepository.findBySet(set, page).map(mappers::mapCardToCardDto);
-
-        return new PaginationResponse<>(cardDtoPage, pagination);
-    }
-
     private Card getCardVerifySetAndAuthor(long cardId, long setId, Authentication auth) {
         CardSet set = getSetAndVerifyAuthor(setId, auth);
         Card card = getCard(cardId);

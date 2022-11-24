@@ -1,8 +1,6 @@
 package com.example.flashcards.service;
 
 import com.example.flashcards.dto.card.CardDto;
-import com.example.flashcards.dto.pagination.PaginationRequest;
-import com.example.flashcards.dto.pagination.PaginationResponse;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -12,9 +10,10 @@ public interface CardService {
     /**
      * Save a new card. Verify that the user is the author of the set
      * and that set doesn't already contain the card with provided front value
-     * @param setId id of the set
+     *
+     * @param setId   id of the set
      * @param cardDto card to save
-     * @param auth currently authenticated user
+     * @param auth    currently authenticated user
      * @return saved card
      */
     CardDto saveCard(long setId, CardDto cardDto, Authentication auth);
@@ -22,19 +21,21 @@ public interface CardService {
     /**
      * Save a card with given id. Verify that the user is the author of the set
      * and that the card with given belongs to the set
+     *
      * @param cardId id of the card to delete
-     * @param setId id of the set card belongs to
-     * @param auth currently authenticated user
+     * @param setId  id of the set card belongs to
+     * @param auth   currently authenticated user
      */
     void deleteCard(long cardId, long setId, Authentication auth);
 
     /**
      * Update existing card. Verify that the user is the author of the set
      * and that the card with given belongs to the set
-     * @param cardId id of the card to update
-     * @param setId id of the set card belongs to
+     *
+     * @param cardId  id of the card to update
+     * @param setId   id of the set card belongs to
      * @param cardDto new card data
-     * @param auth authenticated user
+     * @param auth    authenticated user
      * @return updated card
      */
     CardDto replaceCard(long cardId, long setId, CardDto cardDto, Authentication auth);
@@ -42,19 +43,11 @@ public interface CardService {
     /**
      * Retrieves the card by id if it exists, belongs to the set
      * and if it is public or the user is the author of the set
-      * @param cardId id of the card
-     * @param setId id of the set card should belong to
-     * @param auth authenticated user
+     *
+     * @param cardId id of the card
+     * @param setId  id of the set card should belong to
+     * @param auth   authenticated user
      * @return retrieved card
      */
     CardDto getCardById(long cardId, long setId, Authentication auth);
-
-    /**
-     * Retrieve cards if they are available for the authenticated user
-     * @param setId id of the set
-     * @param auth authenticated user
-     * @param pagination pagination request
-     * @return list of card according to pagination request
-     */
-    PaginationResponse<CardDto> getCards(long setId, Authentication auth, PaginationRequest pagination);
 }

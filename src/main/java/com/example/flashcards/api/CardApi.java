@@ -1,8 +1,6 @@
 package com.example.flashcards.api;
 
 import com.example.flashcards.dto.card.CardDto;
-import com.example.flashcards.dto.pagination.PaginationRequest;
-import com.example.flashcards.dto.pagination.PaginationResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -32,11 +30,4 @@ public interface CardApi {
 
     @GetMapping("{cardId}")
     CardDto getCard(@PathVariable long cardId, @PathVariable long setId, Authentication auth);
-
-    @GetMapping
-    PaginationResponse<CardDto> getCards(
-            @PathVariable long setId,
-            @Valid PaginationRequest pagination,
-            Authentication auth
-    );
 }
