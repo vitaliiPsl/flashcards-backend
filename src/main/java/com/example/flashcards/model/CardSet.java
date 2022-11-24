@@ -1,6 +1,9 @@
 package com.example.flashcards.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +12,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "flash_card_set", uniqueConstraints = {
         @UniqueConstraint(name = "uq_card_set_and_author", columnNames = {"name", "author_id"})
