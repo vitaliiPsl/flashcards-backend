@@ -82,6 +82,7 @@ public class CardSetServiceImpl implements CardSetService {
         existing.setType(cardSetDto.getType());
         existing.setUpdatedAt(LocalDateTime.now());
 
+        cardSetRepository.save(existing);
         return mappers.mapCardSetToCardSetDto(existing);
     }
 
