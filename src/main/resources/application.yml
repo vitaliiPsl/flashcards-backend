@@ -3,7 +3,9 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:h2:file:./flashcards-db/db
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 logging:
   level:
@@ -13,3 +15,14 @@ security:
   jwt:
     secret: jwt.super.secret.key
     expiration-time-minutes: 10080
+
+---
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:h2:file:./flashcards-db/db
+    username:
+    password:
+  jpa:
+    database: h2
