@@ -2,15 +2,21 @@ package com.example.flashcards.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Schema(name = "UserDto")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "UserDto")
 public class UserDto {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, title = "Id of the user", example = "3")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

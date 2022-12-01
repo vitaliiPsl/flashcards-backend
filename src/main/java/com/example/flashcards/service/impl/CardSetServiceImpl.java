@@ -82,6 +82,7 @@ public class CardSetServiceImpl implements CardSetService {
         existing.setType(cardSetDto.getType());
         existing.setUpdatedAt(LocalDateTime.now());
 
+        cardSetRepository.save(existing);
         return mappers.mapCardSetToCardSetDto(existing);
     }
 
@@ -189,11 +190,13 @@ public class CardSetServiceImpl implements CardSetService {
 
         Optional<CardSet> optionalCardSet = cardSetRepository.findById(id);
         if (optionalCardSet.isEmpty()) {
+            log.error("Set with id {} doesn't exist", id);
             throw new ResourceNotFound(id, CardSet.class);
         }
 
         CardSet cardSet = optionalCardSet.get();
         if (!cardSet.getAuthor().equals(user)) {
+            log.error("User {} is not the author of the set with id {}", user.getId(), id);
             throw new ResourceNotAccessible(id, user, CardSet.class);
         }
 

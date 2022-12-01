@@ -1,0 +1,21 @@
+version: '2'
+services:
+  backend:
+    image: flashcards-backend
+    container_name: flashcards
+    ports:
+      - "80:8080"
+    depends_on:
+      - db
+    environment:
+      PORT: 8080
+      DB_URL: jdbc:postgresql://db:5432/postgres
+      DB_USERNAME: dev
+      DB_PASSWORD: dev123
+
+  db:
+    image: postgres:alpine
+    container_name: db
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev123

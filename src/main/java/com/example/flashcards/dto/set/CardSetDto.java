@@ -6,7 +6,10 @@ import com.example.flashcards.model.SetType;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -14,6 +17,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CardSetDto {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, title = "Id of the set", example = "4")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -40,6 +46,6 @@ public class CardSetDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 
-    @Schema(title = "List of flash cards", implementation = CardDto.class)
+    @Schema(title = "List of flash cards")
     private Set<CardDto> cards = new HashSet<>();
 }

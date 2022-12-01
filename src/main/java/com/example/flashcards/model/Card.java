@@ -1,13 +1,17 @@
 package com.example.flashcards.model;
 
 import com.example.flashcards.model.learning.Difficulty;
-import lombok.Data;
-import lombok.ToString;
+import com.example.flashcards.model.learning.Question;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "flash_card", uniqueConstraints = {
@@ -30,6 +34,9 @@ public class Card {
     @ToString.Exclude
     @ManyToOne
     private CardSet set;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<Question> question;
 
     @Override
     public boolean equals(Object o) {

@@ -81,14 +81,18 @@ public class LearningServiceImpl implements LearningService {
     }
 
     private QuestionDto verifyAnswer(Question question, QuestionAnswerDto questionAnswerDto) {
+        log.info("Verify question answer. Answer: {}. Correct answer: {}", questionAnswerDto.getAnswer(), question.getCorrectAnswer());
+
         String correctAnswer = question.getCorrectAnswer();
         String answer = questionAnswerDto.getAnswer();
 
         if (correctAnswer.equals(answer)) {
-            incrementCardDifficulty(question.getCard());
+            log.info("Provided answer is correct");
+            decrementCardDifficulty(question.getCard());
             question.setCorrect(true);
         } else {
-            decrementCardDifficulty(question.getCard());
+            log.info("Provided answer isn't correct");
+            incrementCardDifficulty(question.getCard());
             question.setCorrect(false);
         }
 
@@ -129,15 +133,37 @@ public class LearningServiceImpl implements LearningService {
     }
 
     private Card selectCardToStudy(List<Card> cards) {
-        Map<Difficulty, List<Card>> buckets = groupByProgress(cards);
-        if (buckets.size() == 1) {
-            return selectRandomCard(cards);
-        }
+        Map<Difficulty, List<Card>> buckets = groupByDifficulty(cards);
 
-        return selectRandomCard(cards);
+        double random = Math.random();
+        if(random <= Difficulty.HARD.getDistribution()) {
+            if(buckets.containsKey(Difficulty.HARD)) {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            } else if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            }
+        } else if(random < Difficulty.GOOD.getDistribution()) {
+            if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else if(buckets.containsKey(Difficulty.HARD)) {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            }
+        } else {
+            if(buckets.containsKey(Difficulty.EASY)) {
+                return selectRandomCard(buckets.get(Difficulty.EASY));
+            } else if(buckets.containsKey(Difficulty.GOOD)) {
+                return selectRandomCard(buckets.get(Difficulty.GOOD));
+            } else {
+                return selectRandomCard(buckets.get(Difficulty.HARD));
+            }
+        }
     }
 
-    private static Map<Difficulty, List<Card>> groupByProgress(List<Card> cards) {
+    private static Map<Difficulty, List<Card>> groupByDifficulty(List<Card> cards) {
         return cards.stream().collect(Collectors.groupingBy(Card::getDifficulty));
     }
 
@@ -162,7 +188,7 @@ public class LearningServiceImpl implements LearningService {
         return cards.get(new Random().nextInt(cards.size()));
     }
 
-    private void incrementCardDifficulty(Card card) {
+    private void decrementCardDifficulty(Card card) {
         Difficulty difficulty = card.getDifficulty();
 
         if (difficulty == Difficulty.HARD) {
@@ -172,13 +198,13 @@ public class LearningServiceImpl implements LearningService {
         }
     }
 
-    private void decrementCardDifficulty(Card card) {
+    private void incrementCardDifficulty(Card card) {
         Difficulty difficulty = card.getDifficulty();
 
         if (difficulty == Difficulty.GOOD) {
             card.setDifficulty(Difficulty.HARD);
         } else if(difficulty == Difficulty.EASY) {
-            card.setDifficulty(Difficulty.EASY);
+            card.setDifficulty(Difficulty.GOOD);
         }
     }
 

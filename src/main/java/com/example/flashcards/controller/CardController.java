@@ -2,8 +2,6 @@ package com.example.flashcards.controller;
 
 import com.example.flashcards.api.CardApi;
 import com.example.flashcards.dto.card.CardDto;
-import com.example.flashcards.dto.pagination.PaginationRequest;
-import com.example.flashcards.dto.pagination.PaginationResponse;
 import com.example.flashcards.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -28,9 +26,5 @@ public class CardController implements CardApi {
 
     public CardDto getCard(long cardId, long setId, Authentication auth) {
         return cardService.getCardById(cardId, setId, auth);
-    }
-
-    public PaginationResponse<CardDto> getCards(long setId, PaginationRequest pagination, Authentication auth) {
-        return cardService.getCards(setId, auth, pagination);
     }
 }
