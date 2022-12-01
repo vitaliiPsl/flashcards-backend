@@ -46,6 +46,6 @@ public class CardSetDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 
-    @Schema(title = "List of flash cards", implementation = CardDto.class)
+    @Schema(title = "List of flash cards")
     private Set<CardDto> cards = new HashSet<>();
 }
